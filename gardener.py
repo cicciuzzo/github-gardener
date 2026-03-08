@@ -16,9 +16,38 @@ SCRIPT_DIR    = Path(__file__).parent
 DIARY_DIR     = SCRIPT_DIR / "diary"
 README_FILE   = SCRIPT_DIR / "README.md"
 ENV_FILE      = SCRIPT_DIR / ".env"
-SKIP_PROB     = 0.30    # probabilità di saltare l'esecuzione
 HOUR_START    = 8       # ora minima operativa
 HOUR_END      = 23      # ora massima operativa
+
+# Probabilità di ESEGUIRE per fascia oraria e giorno.
+# Lun-Ven: lavora 9-18, committa poco; sera e mattina presto più attivo.
+# Sab-Dom: distribuito nella giornata, ma non troppo.
+# Chiave: (day_of_week range, hour range) → prob di eseguire
+# day_of_week: 0=lunedì ... 6=domenica
+def _skip_prob(now: datetime) -> float:
+    """Ritorna probabilità di SKIP. Pattern da lavoratore full-time."""
+    dow  = now.weekday()     # 0=lun, 6=dom
+    hour = now.hour
+    weekend = dow >= 5
+
+    if weekend:
+        # Weekend: attività sparsa, ~2-3 commit/giorno
+        if 10 <= hour <= 13:
+            return 0.75
+        elif 15 <= hour <= 19:
+            return 0.70
+        else:
+            return 0.90
+    else:
+        # Lun-Ven: durante orario lavoro quasi mai, sera/mattina sì
+        if 9 <= hour <= 18:
+            return 0.95   # raramente durante il lavoro
+        elif 19 <= hour <= 22:
+            return 0.60   # sera: fascia più attiva
+        elif 8 <= hour <= 9:
+            return 0.80   # mattina presto: qualcosina
+        else:
+            return 0.95
 MODEL         = "claude-haiku-4-5-20251001"
 README_MAX    = 100     # entry massime nel README prima di archiviare
 ENTRY_SEP     = "<!-- entry -->"
@@ -160,11 +189,11 @@ def scegli_attivita() -> str:
 def main() -> None:
     load_env(ENV_FILE)
 
-    ora = datetime.now().hour
-    if not (HOUR_START <= ora < HOUR_END):
+    now = datetime.now()
+    if not (HOUR_START <= now.hour < HOUR_END):
         sys.exit(0)
 
-    if random.random() < SKIP_PROB:
+    if random.random() < _skip_prob(now):
         sys.exit(0)
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
