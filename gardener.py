@@ -4,6 +4,7 @@ gardener.py — coltiva la griglia verde di GitHub con saggezza fuffaguru genera
 Leggi il README prima di giudicare.
 """
 
+import json
 import os
 import random
 import subprocess
@@ -16,39 +17,163 @@ SCRIPT_DIR    = Path(__file__).parent
 DIARY_DIR     = SCRIPT_DIR / "diary"
 README_FILE   = SCRIPT_DIR / "README.md"
 ENV_FILE      = SCRIPT_DIR / ".env"
+STATE_FILE    = SCRIPT_DIR / ".state.json"
 HOUR_START    = 8       # ora minima operativa
-HOUR_END      = 23      # ora massima operativa
-
-# Probabilità di ESEGUIRE per fascia oraria e giorno.
-# Lun-Ven: lavora 9-18, committa poco; sera e mattina presto più attivo.
-# Sab-Dom: distribuito nella giornata, ma non troppo.
-# Chiave: (day_of_week range, hour range) → prob di eseguire
-# day_of_week: 0=lunedì ... 6=domenica
-def _skip_prob(now: datetime) -> float:
-    """Ritorna probabilità di SKIP. Pattern da lavoratore full-time."""
-    dow  = now.weekday()     # 0=lun, 6=dom
-    hour = now.hour
-    weekend = dow >= 5
-
-    if weekend:
-        # Weekend: attività sparsa, ~2-3 commit/giorno
-        if 10 <= hour <= 13:
-            return 0.75
-        elif 15 <= hour <= 19:
-            return 0.70
-        else:
-            return 0.90
-    else:
-        # Lun-Ven: durante orario lavoro quasi mai, sera/mattina sì
-        if 9 <= hour <= 18:
-            return 0.95   # raramente durante il lavoro
-        elif 19 <= hour <= 22:
-            return 0.60   # sera: fascia più attiva
-        elif 8 <= hour <= 9:
-            return 0.80   # mattina presto: qualcosina
-        else:
-            return 0.95
+HOUR_END      = 24      # esteso a mezzanotte (22-24 leggermente attivo)
 MODEL         = "claude-haiku-4-5-20251001"
+
+
+# ---------------------------------------------------------------------------
+# Distribuzione probabilistica — validata da Roberto Battiti (Caltech)
+#
+# Migliorie rispetto alla v1:
+# - Moltiplicatore giornaliero Beta(a,b) → giorni caldi/freddi
+# - Skip interi weekend con P=0.25
+# - Sessioni correlate: un commit passato aumenta P dei successivi
+# - Pausa pranzo 12-13 leggermente attiva
+# - Tarda sera 22-24 leggermente attiva
+# ---------------------------------------------------------------------------
+
+# Prob di SKIP base per fascia oraria (prima del moltiplicatore giornaliero)
+_SKIP_BASE = {
+    # (weekend, hour_range) → skip_prob
+    # Lun-Ven
+    (False,  8):  0.80,   # mattina presto
+    (False,  9):  0.95,   # lavoro
+    (False, 10):  0.95,
+    (False, 11):  0.95,
+    (False, 12):  0.90,   # pausa pranzo — commit veloce
+    (False, 13):  0.95,
+    (False, 14):  0.95,
+    (False, 15):  0.95,
+    (False, 16):  0.95,
+    (False, 17):  0.95,
+    (False, 18):  0.85,   # uscita dal lavoro
+    (False, 19):  0.55,   # sera: fascia più attiva
+    (False, 20):  0.55,
+    (False, 21):  0.60,
+    (False, 22):  0.80,   # tarda sera
+    (False, 23):  0.85,
+    # Sab-Dom
+    (True,   8):  0.95,
+    (True,   9):  0.90,
+    (True,  10):  0.75,
+    (True,  11):  0.70,
+    (True,  12):  0.75,
+    (True,  13):  0.85,
+    (True,  14):  0.85,
+    (True,  15):  0.70,
+    (True,  16):  0.65,
+    (True,  17):  0.70,
+    (True,  18):  0.75,
+    (True,  19):  0.80,
+    (True,  20):  0.80,
+    (True,  21):  0.85,
+    (True,  22):  0.85,
+    (True,  23):  0.90,
+}
+
+
+def _load_state() -> dict:
+    """Carica stato persistente (moltiplicatore giornaliero, sessione)."""
+    try:
+        with open(STATE_FILE) as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def _save_state(state: dict) -> None:
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f)
+
+
+def _beta_sample(a: float, b: float) -> float:
+    """Campione da Beta(a,b) usando metodo di Jöhnk — zero dipendenze."""
+    while True:
+        u1 = random.random()
+        u2 = random.random()
+        x = u1 ** (1.0 / a)
+        y = u2 ** (1.0 / b)
+        if x + y <= 1.0:
+            return x / (x + y)
+
+
+def _get_day_multiplier(state: dict, now: datetime) -> float:
+    """
+    Moltiplicatore giornaliero: scala le probabilità di esecuzione.
+    Campionato una volta per giorno e salvato nello state.
+    Beta(2,5) per feriali → media 0.28, produce giorni caldi e freddi
+    Beta(1.5,3) per weekend → media 0.33, più varianza
+    """
+    today_str = now.strftime("%Y-%m-%d")
+    if state.get("day_date") == today_str:
+        return state["day_mult"]
+
+    weekend = now.weekday() >= 5
+
+    # Skip intero weekend con P=0.25
+    if weekend and random.random() < 0.25:
+        mult = 0.0  # giornata completamente vuota
+    else:
+        mult = _beta_sample(1.5, 3.0) if weekend else _beta_sample(2.0, 5.0)
+        # Normalizza: mult ∈ [0, 1], moltiplica la P(exec)
+        # Scaliamo per avere media ~1.0: dividiamo per la media della Beta
+        mean = 1.5 / 4.5 if weekend else 2.0 / 7.0
+        mult = mult / mean  # ora media ≈ 1.0, range [0, ~3]
+        mult = min(mult, 2.5)  # cap per evitare giornate esplosive
+
+    state["day_date"] = today_str
+    state["day_mult"] = mult
+    return mult
+
+
+def _get_session_boost(state: dict, now: datetime) -> float:
+    """
+    Sessioni correlate: se l'ultimo commit è stato < 90 min fa,
+    aumenta la probabilità di eseguire (simula burst).
+    Ritorna un fattore moltiplicativo per P(exec): 1.0 = nessun boost, >1 = boost.
+    """
+    last_exec_ts = state.get("last_exec_ts", 0)
+    elapsed_min  = (now.timestamp() - last_exec_ts) / 60.0
+
+    if elapsed_min < 30:
+        return 2.5   # appena committato → alta prob di continuare
+    elif elapsed_min < 60:
+        return 1.8
+    elif elapsed_min < 90:
+        return 1.3
+    return 1.0
+
+
+def should_skip(now: datetime) -> bool:
+    """Decisione finale: skip o eseguire, con tutti i fattori."""
+    state = _load_state()
+
+    day_mult = _get_day_multiplier(state, now)
+    _save_state(state)
+
+    if day_mult == 0.0:
+        return True  # giornata off
+
+    weekend   = now.weekday() >= 5
+    base_skip = _SKIP_BASE.get((weekend, now.hour), 0.95)
+    base_exec = 1.0 - base_skip
+
+    session_boost = _get_session_boost(state, now)
+
+    # P(exec) finale = base × day_mult × session_boost, clampato a [0, 0.8]
+    p_exec = min(base_exec * day_mult * session_boost, 0.80)
+
+    return random.random() > p_exec
+
+
+def record_execution(now: datetime) -> None:
+    """Registra che un'esecuzione è avvenuta (per sessioni correlate)."""
+    state = _load_state()
+    state["last_exec_ts"] = now.timestamp()
+    _save_state(state)
+
 README_MAX    = 100     # entry massime nel README prima di archiviare
 ENTRY_SEP     = "<!-- entry -->"
 REPO          = "cicciuzzo/github-gardener"
@@ -193,7 +318,7 @@ def main() -> None:
     if not (HOUR_START <= now.hour < HOUR_END):
         sys.exit(0)
 
-    if random.random() < _skip_prob(now):
+    if should_skip(now):
         sys.exit(0)
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -214,6 +339,8 @@ def main() -> None:
 
         elif attivita == "issue":
             fai_issue(now)
+
+        record_execution(now)
 
     except Exception as e:
         # Assicurati di tornare su main in caso di errore durante PR
