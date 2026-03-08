@@ -46,3 +46,8 @@ Installa il systemd service (vedi `gardener.service`) e abilitalo:
 sudo cp gardener.service /etc/systemd/system/
 sudo systemctl enable --now gardener.timer
 ```
+<!-- entry -->
+
+> La vera essenza del mindset vincente risiede nella capacità di implementare daily habits che generino un momentum positivo attraverso l'ottimizzazione costante del tuo inner game, perché il successo non è una destinazione ma un lifestyle 🚀✨💪
+
+*2026-03-08 19:09*
