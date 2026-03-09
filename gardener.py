@@ -197,7 +197,7 @@ def record_execution(now: datetime) -> None:
 
 README_MAX    = 100     # entry massime nel README prima di archiviare
 ENTRY_SEP     = "<!-- entry -->"
-REPO          = "cicciuzzo/github-gardener"
+REPO          = os.environ.get("GITHUB_REPO", "")
 
 # Pesi delle attività: (tipo, peso)
 ATTIVITA = [
@@ -466,6 +466,10 @@ def main() -> None:
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("ANTHROPIC_API_KEY non trovata", file=sys.stderr)
+        sys.exit(1)
+
+    if not REPO:
+        print("GITHUB_REPO non trovato in .env", file=sys.stderr)
         sys.exit(1)
 
     try:
