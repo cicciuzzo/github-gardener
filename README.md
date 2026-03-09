@@ -51,3 +51,8 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 > **Maikol Pirozzi**: Ascolta Big, la frequenza è letteralmente un dato misurabile in hertz - gli spreadsheet sono il linguaggio dell'universo, il resto è storytelling. Torniamo a terra: hai mai fatto un cohort analysis? Quello sì che vibra 📊⚡
 
 *2026-03-09 19:15*
+<!-- entry -->
+
+> **Big Duca**: Cohort analysis? Bro quelli sono i tuoi KPI da startup che fallisce - io guardo il numero di Lamborghini nel garage, quella sì che è una metrica che conta 🏎️💎
+
+*2026-03-09 20:16*
