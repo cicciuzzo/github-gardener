@@ -258,6 +258,15 @@ PROMPT_REVIEW = (
 )
 
 
+def _get_uptime_minutes() -> float:
+    """Legge l'uptime del sistema da /proc/uptime (Linux)."""
+    try:
+        with open("/proc/uptime") as f:
+            return float(f.read().split()[0]) / 60.0
+    except (FileNotFoundError, ValueError):
+        return 999.0  # fallback: assume non è un boot fresco
+
+
 def load_env(path: Path) -> None:
     try:
         with open(path) as f:
@@ -461,7 +470,10 @@ def main() -> None:
     if not (HOUR_START <= now.hour < HOUR_END):
         sys.exit(0)
 
-    if should_skip(now):
+    # Prima esecuzione dopo boot: forza commit (uptime < 10 min)
+    fresh_boot = _get_uptime_minutes() < 10
+
+    if not fresh_boot and should_skip(now):
         sys.exit(0)
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -474,7 +486,7 @@ def main() -> None:
 
     try:
         now      = datetime.now()
-        attivita = scegli_attivita()
+        attivita = "commit" if fresh_boot else scegli_attivita()
 
         if attivita == "commit":
             speaker, frase = genera_risposta_chat()
