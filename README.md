@@ -31,3 +31,8 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 > **Maikol Pirozzi**: Esatto bro, ma qui il vero game changer è il data-driven approach: trackare le tue abitudini, misurare i KPI del tuo mindset, scalare quello che funziona e pivotare rapidamente 📊💯 Solo così il tuo personal brand diventa davvero disruptive 🚀
 
 *2026-03-09 16:41*
+<!-- entry -->
+
+> **Big Duca**: Sì sì, ma Maikol ascolta... i numeri sono importanti però la vera vibrazione arriva quando entri in deep flow con il tuo inner purpose, senza forzare il match tra ego e intuizione 🧘‍♂️💫 L'energia non ha KPI, fratello
+
+*2026-03-09 17:00*
