@@ -35,42 +35,43 @@ MODEL         = "claude-haiku-4-5-20251001"
 # ---------------------------------------------------------------------------
 
 # Prob di SKIP base per fascia oraria (prima del moltiplicatore giornaliero)
+DAILY_MIN_EXEC = 2   # minimo garantito di esecuzioni al giorno
 _SKIP_BASE = {
     # (weekend, hour_range) → skip_prob
     # Lun-Ven
-    (False,  8):  0.80,   # mattina presto
-    (False,  9):  0.95,   # lavoro
-    (False, 10):  0.95,
-    (False, 11):  0.95,
-    (False, 12):  0.90,   # pausa pranzo — commit veloce
-    (False, 13):  0.95,
-    (False, 14):  0.95,
-    (False, 15):  0.95,
-    (False, 16):  0.95,
-    (False, 17):  0.95,
-    (False, 18):  0.85,   # uscita dal lavoro
-    (False, 19):  0.55,   # sera: fascia più attiva
-    (False, 20):  0.55,
-    (False, 21):  0.60,
-    (False, 22):  0.80,   # tarda sera
-    (False, 23):  0.85,
+    (False,  8):  0.70,   # mattina presto
+    (False,  9):  0.80,   # lavoro
+    (False, 10):  0.80,
+    (False, 11):  0.80,
+    (False, 12):  0.75,   # pausa pranzo — commit veloce
+    (False, 13):  0.80,
+    (False, 14):  0.80,
+    (False, 15):  0.80,
+    (False, 16):  0.80,
+    (False, 17):  0.80,
+    (False, 18):  0.65,   # uscita dal lavoro
+    (False, 19):  0.35,   # sera: fascia più attiva
+    (False, 20):  0.35,
+    (False, 21):  0.40,
+    (False, 22):  0.60,   # tarda sera
+    (False, 23):  0.70,
     # Sab-Dom
-    (True,   8):  0.95,
-    (True,   9):  0.90,
-    (True,  10):  0.75,
-    (True,  11):  0.70,
-    (True,  12):  0.75,
-    (True,  13):  0.85,
-    (True,  14):  0.85,
-    (True,  15):  0.70,
-    (True,  16):  0.65,
-    (True,  17):  0.70,
-    (True,  18):  0.75,
-    (True,  19):  0.80,
-    (True,  20):  0.80,
-    (True,  21):  0.85,
-    (True,  22):  0.85,
-    (True,  23):  0.90,
+    (True,   8):  0.85,
+    (True,   9):  0.75,
+    (True,  10):  0.60,
+    (True,  11):  0.55,
+    (True,  12):  0.60,
+    (True,  13):  0.70,
+    (True,  14):  0.70,
+    (True,  15):  0.55,
+    (True,  16):  0.50,
+    (True,  17):  0.55,
+    (True,  18):  0.60,
+    (True,  19):  0.65,
+    (True,  20):  0.65,
+    (True,  21):  0.70,
+    (True,  22):  0.70,
+    (True,  23):  0.80,
 }
 
 
@@ -146,6 +147,29 @@ def _get_session_boost(state: dict, now: datetime) -> float:
     return 1.0
 
 
+def _get_day_exec_count(state: dict, now: datetime) -> int:
+    """Numero di esecuzioni oggi."""
+    today_str = now.strftime("%Y-%m-%d")
+    if state.get("day_date") != today_str:
+        return 0
+    return state.get("day_exec_count", 0)
+
+
+def _should_force_catchup(state: dict, now: datetime) -> bool:
+    """
+    Catch-up serale: se non abbiamo raggiunto il minimo giornaliero,
+    forza l'esecuzione nelle ultime ore. Sovrascrive anche day_mult=0.
+    """
+    count = _get_day_exec_count(state, now)
+    if count >= DAILY_MIN_EXEC:
+        return False
+    if now.hour >= 22 and count == 0:
+        return True                        # 0 commit alle 22+: forza
+    if now.hour >= 21 and count <= 1:
+        return random.random() < 0.85      # 85% di forzare
+    return False
+
+
 def should_skip(now: datetime) -> bool:
     """Decisione finale: skip o eseguire, con tutti i fattori."""
     state = _load_state()
@@ -153,11 +177,15 @@ def should_skip(now: datetime) -> bool:
     day_mult = _get_day_multiplier(state, now)
     _save_state(state)
 
+    # Catch-up: sovrascrive tutto, incluso day_mult=0
+    if _should_force_catchup(state, now):
+        return False
+
     if day_mult == 0.0:
         return True  # giornata off
 
     weekend   = now.weekday() >= 5
-    base_skip = _SKIP_BASE.get((weekend, now.hour), 0.95)
+    base_skip = _SKIP_BASE.get((weekend, now.hour), 0.80)
     base_exec = 1.0 - base_skip
 
     session_boost = _get_session_boost(state, now)
@@ -169,9 +197,14 @@ def should_skip(now: datetime) -> bool:
 
 
 def record_execution(now: datetime) -> None:
-    """Registra che un'esecuzione è avvenuta (per sessioni correlate)."""
+    """Registra che un'esecuzione è avvenuta (per sessioni correlate e conteggio giornaliero)."""
     state = _load_state()
     state["last_exec_ts"] = now.timestamp()
+    today_str = now.strftime("%Y-%m-%d")
+    if state.get("day_date") == today_str:
+        state["day_exec_count"] = state.get("day_exec_count", 0) + 1
+    else:
+        state["day_exec_count"] = 1
     _save_state(state)
 
 README_MAX    = 100     # entry massime nel README prima di archiviare
@@ -313,6 +346,12 @@ def scegli_attivita() -> str:
 
 def main() -> None:
     load_env(ENV_FILE)
+
+    # Sincronizza con il remote (può fallire se offline)
+    try:
+        git(SCRIPT_DIR, "pull", "--rebase")
+    except Exception:
+        pass
 
     now = datetime.now()
     if not (HOUR_START <= now.hour < HOUR_END):
