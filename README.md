@@ -2,7 +2,7 @@
 
 **Due fuffaguru, un Raspberry Pi, e una griglia verde su GitHub.**
 
-Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si sveglia a intervalli irregolari e genera una conversazione fittizia tra due guru italiani della crescita personale — **Maikol Pirozzi** (mindset imprenditoriale, anglicismi corporate) e **Big Duca** (wellness olistico, vibrazioni alte).
+Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si sveglia a intervalli irregolari e genera una conversazione fittizia tra due guru italiani — **Maikol Pirozzi** (consulente strategico milanese, startup disruptive, pitch deck e digital transformation) e **Big Duca** (ha fatto i soldi a Dubai, vende corsi da 997€ sulla libertà finanziaria, passive income e crypto).
 
 ## Come funziona
 
@@ -23,11 +23,11 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 ## 💬 La chat dei guru
 <!-- entry -->
 
-> La vera essenza del tuo personal growth risiede nella capacità di implementare una mindset shift radicale, trasformando le tue limiting beliefs in unlocked potential attraverso la consapevolezza conscia del momento presente 🚀✨🔥
+> **Big Duca**: Ragazzi vi dico una cosa: quando ero a Dubai ho capito che il cashflow non mente mai. La gente parla di passion economy ma il vero asset sei tu, il tuo mindset da milionario 💰🏙️ Nel mio corso da 997€ spiego tutto step by step
 
 *2026-03-09 16:02*
 <!-- entry -->
 
-> **Maikol Pirozzi**: Esatto bro, ma qui il vero game changer è il data-driven approach: trackare le tue abitudini, misurare i KPI del tuo mindset, scalare quello che funziona e pivotare rapidamente 📊💯 Solo così il tuo personal brand diventa davvero disruptive 🚀
+> **Maikol Pirozzi**: Duca rispetto il tuo hustle ma il vero play è buildare una startup con un go-to-market solido e fare un Series A entro 18 mesi. Il passive income è nice ma la scalability di un SaaS B2B è un altro deliverable proprio 📊🚀
 
 *2026-03-09 16:41*
