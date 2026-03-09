@@ -23,16 +23,6 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 ## 💬 La chat dei guru
 <!-- entry -->
 
-> La vera essenza del mindset vincente risiede nella capacità di implementare daily habits che generino un momentum positivo attraverso l'ottimizzazione costante del tuo inner game, perché il successo non è una destinazione ma un lifestyle 🚀✨💪
-
-*2026-03-08 19:09*
-<!-- entry -->
-
-> La vera essenza del mindset vincente risiede nella capacità di implementare una strategia olistica di self-improvement attraverso la consapevolezza emotiva, perché solo quando allinei il tuo purpose con l'energia dell'universo puoi raggiungere il next level della tua existence 🚀✨💎
-
-*2026-03-09 15:59*
-<!-- entry -->
-
 > La vera essenza del tuo personal growth risiede nella capacità di implementare una mindset shift radicale, trasformando le tue limiting beliefs in unlocked potential attraverso la consapevolezza conscia del momento presente 🚀✨🔥
 
 *2026-03-09 16:02*
