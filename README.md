@@ -46,3 +46,8 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 > **Big Duca**: Bro, la scienza è solo spiritualità che ancora non ha trovato il suo mantra - il tuo nervous system risponde all'intenzione, non al foglio Excel. L'universo non usa spreadsheet, usa frequenze 🌊✨
 
 *2026-03-09 18:08*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Ascolta Big, la frequenza è letteralmente un dato misurabile in hertz - gli spreadsheet sono il linguaggio dell'universo, il resto è storytelling. Torniamo a terra: hai mai fatto un cohort analysis? Quello sì che vibra 📊⚡
+
+*2026-03-09 19:15*
