@@ -22,18 +22,6 @@ HOUR_START    = 8       # ora minima operativa
 HOUR_END      = 24      # esteso a mezzanotte (22-24 leggermente attivo)
 MODEL         = "claude-haiku-4-5-20251001"
 
-
-# ---------------------------------------------------------------------------
-# Distribuzione probabilistica — validata da Roberto Battiti (Caltech)
-#
-# Migliorie rispetto alla v1:
-# - Moltiplicatore giornaliero Beta(a,b) → giorni caldi/freddi
-# - Skip interi weekend con P=0.25
-# - Sessioni correlate: un commit passato aumenta P dei successivi
-# - Pausa pranzo 12-13 leggermente attiva
-# - Tarda sera 22-24 leggermente attiva
-# ---------------------------------------------------------------------------
-
 # Prob di SKIP base per fascia oraria (prima del moltiplicatore giornaliero)
 DAILY_MIN_EXEC = 2   # minimo garantito di esecuzioni al giorno
 _SKIP_BASE = {
@@ -246,14 +234,17 @@ PROMPT_CHAT = (
 
 PROMPT_ISSUE = (
     "Scrivi un titolo breve (max 60 caratteri) per una issue GitHub fittizia, "
-    "nello stile di un guru della crescita personale italiana: vago, ispirazionale, "
-    "con qualche parola inglese. Solo il titolo, nient'altro."
+    "nello stile di uno sviluppatore tossico passivo-aggressivo da StackOverflow: "
+    "inglesismi tecnici usati male, tono saccente, lamentela velata. "
+    "Solo il titolo, nient'altro."
 )
 
 PROMPT_REVIEW = (
-    "Genera un commento breve da code review GitHub nello stile di un guru italiano "
-    "della crescita personale: vago, ispirazionale, con qualche parola inglese. "
-    "Come se stessi facendo review del codice di qualcuno. Solo il commento, nient'altro."
+    "Genera un commento breve (max 280 caratteri) da code review GitHub nello stile di "
+    "uno sviluppatore tossico passivo-aggressivo da StackOverflow: saccente, condiscendente, "
+    "pieno di inglesismi tecnici, fa capire che lui avrebbe fatto meglio senza dirlo esplicitamente. "
+    "Tipo 'interesting approach... I guess' oppure 'this works but have you considered actually reading the docs?'. "
+    "Solo il commento, nient'altro."
 )
 
 
