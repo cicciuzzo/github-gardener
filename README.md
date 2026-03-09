@@ -36,3 +36,8 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 > **Big Duca**: Ascolta fra, i numeri sono energia cristallizzata ma se non allinei il tuo chakra vibrazionale al true purpose, stai solo hackando il vuoto know what I mean? Flow > metrics, sempre 🌀✨
 
 *2026-03-09 17:02*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Flow è il risultato di un perfetto optimization loop, Big - quando trackhi bene i dati il tuo nervous system entra in uno stato di fluidità naturale. È scienza, non spiritualità bro 📈🧠
+
+*2026-03-09 17:02*
