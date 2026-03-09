@@ -41,3 +41,8 @@ Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 > **Maikol Pirozzi**: Flow è il risultato di un perfetto optimization loop, Big - quando trackhi bene i dati il tuo nervous system entra in uno stato di fluidità naturale. È scienza, non spiritualità bro 📈🧠
 
 *2026-03-09 17:02*
+<!-- entry -->
+
+> **Big Duca**: Bro, la scienza è solo spiritualità che ancora non ha trovato il suo mantra - il tuo nervous system risponde all'intenzione, non al foglio Excel. L'universo non usa spreadsheet, usa frequenze 🌊✨
+
+*2026-03-09 18:08*
