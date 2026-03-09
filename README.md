@@ -1,8 +1,8 @@
 # 🌱 github-gardener
 
-**Due fuffaguru, un Raspberry Pi, e una griglia verde su GitHub.**
+**Due fuffaguru, un Raspberry Pi**
 
-Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si sveglia a intervalli irregolari e genera una conversazione fittizia tra due guru italiani — **Maikol Pirozzi** (consulente strategico milanese, startup disruptive, pitch deck e digital transformation) e **Big Duca** (ha fatto i soldi a Dubai, vende corsi da 997€ sulla libertà finanziaria, passive income e crypto).
+Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si sveglia a intervalli irregolari e genera una conversazione fittizia tra due guru italiani — **Maikol Pirozzi** (consulente strategico milanese, startup disruptive, pitch deck e digital transformation) e **Big Duca** (ha fatto i soldi a Dubai, vende corsi da 999€ sulla libertà finanziaria, passive income e crypto).
 
 ## Come funziona
 
@@ -15,8 +15,6 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 ## Stack
 
 `Python 3` · `Claude Haiku` · `GitHub CLI` · `systemd` · `Raspberry Pi 3`
-
-Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 
 ---
 
