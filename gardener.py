@@ -213,9 +213,10 @@ REPO          = "cicciuzzo/github-gardener"
 
 # Pesi delle attività: (tipo, peso)
 ATTIVITA = [
-    ("commit",  70),
-    ("pr",      20),
+    ("commit",  60),
+    ("pr",      15),
     ("issue",   10),
+    ("review",  15),
 ]
 
 PROMPT_FRASE = (
@@ -229,6 +230,12 @@ PROMPT_ISSUE = (
     "Scrivi un titolo breve (max 60 caratteri) per una issue GitHub fittizia, "
     "nello stile di un guru della crescita personale italiana: vago, ispirazionale, "
     "con qualche parola inglese. Solo il titolo, nient'altro."
+)
+
+PROMPT_REVIEW = (
+    "Genera un commento breve da code review GitHub nello stile di un guru italiano "
+    "della crescita personale: vago, ispirazionale, con qualche parola inglese. "
+    "Come se stessi facendo review del codice di qualcuno. Solo il commento, nient'altro."
 )
 
 
@@ -325,6 +332,37 @@ def fai_pr(frase: str, now: datetime) -> None:
     git(SCRIPT_DIR, "pull")
 
 
+def fai_review(frase: str, review_comment: str, now: datetime) -> None:
+    """Branch → commit → PR → review con commento guru → merge → elimina branch."""
+    branch = f"review/{now.strftime('%Y-%m-%d-%H%M')}"
+
+    git(SCRIPT_DIR, "checkout", "-b", branch)
+    aggiorna_readme(frase, now)
+    git(SCRIPT_DIR, "add", "-A")
+    git(SCRIPT_DIR, "commit", "-m", f"🔍 review drop - {now.strftime('%H:%M')}")
+    git(SCRIPT_DIR, "push", "-u", "origin", branch)
+
+    # Apre la PR
+    pr_url = gh("pr", "create",
+                "--repo", REPO,
+                "--title", f"🔍 Code review {now.strftime('%Y-%m-%d')}",
+                "--body", f"> {frase}",
+                "--base", "main",
+                "--head", branch)
+
+    pr_number = pr_url.rstrip("/").split("/")[-1]
+
+    # Lascia un commento di review approvando
+    gh("pr", "review", pr_number, "--repo", REPO, "--approve", "--body", review_comment)
+
+    # Merge e pulizia
+    gh("pr", "merge", pr_number, "--repo", REPO, "--merge", "--delete-branch")
+
+    # Torna su main e aggiorna
+    git(SCRIPT_DIR, "checkout", "main")
+    git(SCRIPT_DIR, "pull")
+
+
 def fai_issue(now: datetime) -> None:
     """Apre una issue fuffaguru e la chiude subito."""
     titolo = chiedi_claude(PROMPT_ISSUE)
@@ -375,6 +413,11 @@ def main() -> None:
         elif attivita == "pr":
             frase = chiedi_claude(PROMPT_FRASE)
             fai_pr(frase, now)
+
+        elif attivita == "review":
+            frase = chiedi_claude(PROMPT_FRASE)
+            review_comment = chiedi_claude(PROMPT_REVIEW)
+            fai_review(frase, review_comment, now)
 
         elif attivita == "issue":
             fai_issue(now)
