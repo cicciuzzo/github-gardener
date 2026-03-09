@@ -408,8 +408,8 @@ def fai_review(speaker: str, frase: str, review_comment: str, now: datetime) -> 
 
     pr_number = pr_url.rstrip("/").split("/")[-1]
 
-    # Lascia un commento di review approvando
-    gh("pr", "review", pr_number, "--repo", REPO, "--approve", "--body", review_comment)
+    # Lascia un commento di review (--comment perché --approve non funziona su PR proprie)
+    gh("pr", "review", pr_number, "--repo", REPO, "--comment", "--body", review_comment)
 
     # Merge e pulizia
     gh("pr", "merge", pr_number, "--repo", REPO, "--merge", "--delete-branch")
