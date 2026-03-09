@@ -1,45 +1,26 @@
-# github-gardener
+# 🌱 github-gardener
 
-**Progetto artistico di vibecoding realizzato con [Claude Code](https://claude.ai/claude-code).**
+**Due fuffaguru, un Raspberry Pi, e una griglia verde su GitHub.**
 
-Sì, la griglia verde è finta. No, non me ne vergogno.
-
-Un Raspberry Pi 3 si sveglia a orari irregolari, chiede a Claude Haiku di generare una perla di saggezza da fuffaguru della crescita personale italiana, e la committa qui. A volte apre PR. A volte apre issue e le chiude subito. Il pattern è semirandom per sembrare plausibilmente umano.
-
-Tutto il codice — dal bot alla configurazione systemd — è stato scritto in vibecoding con Claude Code. Il bot genera le frasi con Claude Haiku. Turtles all the way down.
-
-Il codice è pubblico. Il trucco è dichiarato. Se stai leggendo questo README, congratulazioni: sei più attento del 99% dei recruiter.
-
-> **Nota per recruiter:** se sei arrivato fin qui, hai già dimostrato più attenzione della media. I miei progetti veri sono negli altri repo. Questo è solo il giardiniere.
+Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si sveglia a intervalli irregolari e genera una conversazione fittizia tra due guru italiani della crescita personale — **Maikol Pirozzi** (mindset imprenditoriale, anglicismi corporate) e **Big Duca** (wellness olistico, vibrazioni alte).
 
 ## Come funziona
 
-- **Timer systemd** su RPi3 lancia `gardener.py` ogni ~ora (±20min random)
-- **Pattern da lavoratore full-time**: quasi mai durante orario ufficio (9–18), più attivo la sera e nel weekend
-- **Giorni a zero commit** capitano — come nella vita vera
-- **Attivo solo 08:00–23:00** (anche i fuffaguru dormono)
-- Claude Haiku genera la frase, lo script sceglie cosa fare:
+- Un **timer systemd** lancia `gardener.py` ogni ~1h (±20 min di jitter)
+- Un **modello probabilistico** (distribuzione Beta, correlazione di sessione, moltiplicatore giornaliero) decide se eseguire o saltare — simulando il pattern di attività di uno sviluppatore reale
+- Se esegue, sceglie un'attività: **commit** (60%), **pull request** (15%), **code review** (15%), **issue** (10%)
+- Ogni commit aggiunge una nuova battuta alla chat qui sotto, generata da Claude Haiku con il contesto delle ultime 10 risposte
+- Minimo garantito: 2 interazioni al giorno grazie a un meccanismo di catch-up serale
 
-| Azione | Probabilità | Cosa succede |
-|---|---|---|
-| Commit diretto | 70% | Frase aggiunta a questo README, push su main |
-| Pull Request | 20% | Branch, commit, PR, merge, cleanup |
-| Issue | 10% | Titolo fuffaguru, aperta e chiusa immediatamente |
+## Stack
 
-- Le frasi si accumulano qui sotto — dopo 100 entry le più vecchie finiscono in `diary/`
+`Python 3` · `Claude Haiku` · `GitHub CLI` · `systemd` · `Raspberry Pi 3`
 
-## Setup
-
-```bash
-git clone https://github.com/cicciuzzo/github-gardener && cd github-gardener
-cp .env.example .env   # inserisci ANTHROPIC_API_KEY
-sudo cp gardener.service gardener.timer /etc/systemd/system/
-sudo systemctl enable --now gardener.timer
-```
+Sì, la griglia verde è finta. No, non me ne vergogno. 💚
 
 ---
 
-## 🔮 Il muro della saggezza
+## 💬 La chat dei guru
 <!-- entry -->
 
 > La vera essenza del mindset vincente risiede nella capacità di implementare daily habits che generino un momentum positivo attraverso l'ottimizzazione costante del tuo inner game, perché il successo non è una destinazione ma un lifestyle 🚀✨💪

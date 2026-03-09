@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gardener.py — coltiva la griglia verde di GitHub con saggezza fuffaguru generata da Claude.
+gardener.py — coltiva la griglia verde di GitHub con una chat tra fuffaguru generata da Claude.
 Leggi il README prima di giudicare.
 """
 
@@ -219,11 +219,29 @@ ATTIVITA = [
     ("review",  15),
 ]
 
-PROMPT_FRASE = (
-    "Scrivi una frase lunga esattamente come un tweet che scriverebbe un guru italiano "
-    "della crescita personale: vaga, ispirazionale, piena di parole inglesi messe a caso, "
-    "con emoji strategiche e almeno un concetto ovvio detto in modo complicato. "
-    "Niente hashtag. Solo la frase, nient'altro."
+# --- Chat system: Maikol Pirozzi & Big Duca ---
+
+SPEAKERS = ("Maikol Pirozzi", "Big Duca")
+CONTEXT_ENTRIES = 10    # battute inviate a Claude come contesto
+MAX_REPLY_LEN = 280     # lunghezza max singola risposta
+
+PROMPT_CHAT = (
+    "Sei in una chat tra due guru italiani della crescita personale.\n"
+    "I personaggi:\n"
+    "- **Maikol Pirozzi**: guru del mindset imprenditoriale, abusa di anglicismi corporate "
+    "(leverage, scalability, growth hacking, disruptive), tono assertivo e sicuro di sé.\n"
+    "- **Big Duca**: guru più spirituale-olistico, mescola wellness con business "
+    "(energy, flow, vibrazione alta, inner purpose), tono da mentore compassionevole.\n\n"
+    "Rispondi come {speaker}, continuando la conversazione qui sotto.\n"
+    "REGOLE TASSATIVE:\n"
+    "- Rispondi con UN SOLO messaggio da chat, massimo 280 caratteri\n"
+    "- NON includere il nome del personaggio all'inizio\n"
+    "- NON usare hashtag\n"
+    "- Stile: informale, pieno di parole inglesi messe a caso, emoji strategiche, "
+    "concetti ovvi detti in modo complicato\n"
+    "- Se non c'è conversazione precedente, inizia tu con un argomento fuffaguru\n\n"
+    "Conversazione finora:\n{context}\n\n"
+    "Rispondi come {speaker}:"
 )
 
 PROMPT_ISSUE = (
@@ -271,6 +289,53 @@ def gh(*args: str) -> str:
     return result.stdout.strip()
 
 
+# --- Chat helpers ---
+
+def _get_next_speaker() -> str:
+    """Determina chi parla basandosi sull'ultimo speaker nel README."""
+    try:
+        testo = README_FILE.read_text()
+    except FileNotFoundError:
+        return SPEAKERS[0]
+
+    parts = testo.split(ENTRY_SEP)
+    if len(parts) < 2:
+        return SPEAKERS[0]
+
+    last_entry = parts[-1]
+    if "**Big Duca**:" in last_entry:
+        return "Maikol Pirozzi"
+    elif "**Maikol Pirozzi**:" in last_entry:
+        return "Big Duca"
+    return "Maikol Pirozzi"
+
+
+def _get_recent_context(n: int = CONTEXT_ENTRIES) -> str:
+    """Legge le ultime n entry dal README come contesto per il prompt."""
+    try:
+        testo = README_FILE.read_text()
+    except FileNotFoundError:
+        return "(nessun messaggio precedente)"
+
+    parts = testo.split(ENTRY_SEP)
+    entries = parts[1:]  # skip header
+    if not entries:
+        return "(nessun messaggio precedente)"
+
+    recent = entries[-n:]
+    return "\n".join(e.strip() for e in recent if e.strip())
+
+
+def genera_risposta_chat() -> tuple[str, str]:
+    """Genera la prossima battuta della chat tra Maikol e Big Duca."""
+    speaker = _get_next_speaker()
+    context = _get_recent_context()
+    prompt = PROMPT_CHAT.format(speaker=speaker, context=context)
+    risposta = chiedi_claude(prompt)
+    risposta = risposta[:MAX_REPLY_LEN]
+    return (speaker, risposta)
+
+
 # --- Logica README ---
 
 def archivia_se_necessario(testo: str, now: datetime) -> str:
@@ -289,29 +354,29 @@ def archivia_se_necessario(testo: str, now: datetime) -> str:
     return header + ENTRY_SEP.join([""] + da_tenere)
 
 
-def aggiorna_readme(frase: str, now: datetime) -> None:
+def aggiorna_readme(speaker: str, frase: str, now: datetime) -> None:
     testo = README_FILE.read_text()
-    entry = f"\n\n> {frase}\n\n*{now.strftime('%Y-%m-%d %H:%M')}*\n"
+    entry = f"\n\n> **{speaker}**: {frase}\n\n*{now.strftime('%Y-%m-%d %H:%M')}*\n"
     testo = archivia_se_necessario(testo + ENTRY_SEP + entry, now)
     README_FILE.write_text(testo)
 
 
 # --- Tipi di attività ---
 
-def fai_commit(frase: str, now: datetime) -> None:
+def fai_commit(speaker: str, frase: str, now: datetime) -> None:
     """Commit diretto su main."""
-    aggiorna_readme(frase, now)
+    aggiorna_readme(speaker, frase, now)
     git(SCRIPT_DIR, "add", "-A")
     git(SCRIPT_DIR, "commit", "-m", f"🌱 wisdom drop - {now.strftime('%H:%M')}")
     git(SCRIPT_DIR, "push")
 
 
-def fai_pr(frase: str, now: datetime) -> None:
+def fai_pr(speaker: str, frase: str, now: datetime) -> None:
     """Branch → commit → PR → merge → elimina branch."""
     branch = f"wisdom/{now.strftime('%Y-%m-%d-%H%M')}"
 
     git(SCRIPT_DIR, "checkout", "-b", branch)
-    aggiorna_readme(frase, now)
+    aggiorna_readme(speaker, frase, now)
     git(SCRIPT_DIR, "add", "-A")
     git(SCRIPT_DIR, "commit", "-m", f"✨ insight - {now.strftime('%H:%M')}")
     git(SCRIPT_DIR, "push", "-u", "origin", branch)
@@ -320,7 +385,7 @@ def fai_pr(frase: str, now: datetime) -> None:
     pr_url = gh("pr", "create",
                 "--repo", REPO,
                 "--title", f"💡 Weekly insight {now.strftime('%Y-%m-%d')}",
-                "--body", f"> {frase}",
+                "--body", f"> **{speaker}**: {frase}",
                 "--base", "main",
                 "--head", branch)
 
@@ -332,12 +397,12 @@ def fai_pr(frase: str, now: datetime) -> None:
     git(SCRIPT_DIR, "pull")
 
 
-def fai_review(frase: str, review_comment: str, now: datetime) -> None:
+def fai_review(speaker: str, frase: str, review_comment: str, now: datetime) -> None:
     """Branch → commit → PR → review con commento guru → merge → elimina branch."""
     branch = f"review/{now.strftime('%Y-%m-%d-%H%M')}"
 
     git(SCRIPT_DIR, "checkout", "-b", branch)
-    aggiorna_readme(frase, now)
+    aggiorna_readme(speaker, frase, now)
     git(SCRIPT_DIR, "add", "-A")
     git(SCRIPT_DIR, "commit", "-m", f"🔍 review drop - {now.strftime('%H:%M')}")
     git(SCRIPT_DIR, "push", "-u", "origin", branch)
@@ -346,7 +411,7 @@ def fai_review(frase: str, review_comment: str, now: datetime) -> None:
     pr_url = gh("pr", "create",
                 "--repo", REPO,
                 "--title", f"🔍 Code review {now.strftime('%Y-%m-%d')}",
-                "--body", f"> {frase}",
+                "--body", f"> **{speaker}**: {frase}",
                 "--base", "main",
                 "--head", branch)
 
@@ -407,17 +472,17 @@ def main() -> None:
         attivita = scegli_attivita()
 
         if attivita == "commit":
-            frase = chiedi_claude(PROMPT_FRASE)
-            fai_commit(frase, now)
+            speaker, frase = genera_risposta_chat()
+            fai_commit(speaker, frase, now)
 
         elif attivita == "pr":
-            frase = chiedi_claude(PROMPT_FRASE)
-            fai_pr(frase, now)
+            speaker, frase = genera_risposta_chat()
+            fai_pr(speaker, frase, now)
 
         elif attivita == "review":
-            frase = chiedi_claude(PROMPT_FRASE)
+            speaker, frase = genera_risposta_chat()
             review_comment = chiedi_claude(PROMPT_REVIEW)
-            fai_review(frase, review_comment, now)
+            fai_review(speaker, frase, review_comment, now)
 
         elif attivita == "issue":
             fai_issue(now)
