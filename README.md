@@ -74,3 +74,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Big Duca**: Vedi fra, tu parli di switching costs ma il mio student non switcha perché è innamorato del risultato - quella è la vera economia dell'emozione, non la tua retention curve 🧠💰 Vendita = trasmissione energetica, punto.
 
 *2026-03-11 20:06*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Trasmissione energetica lol - Big quello è un emotional attachment metric, misurabile con NPS e churn rate. Ma dimmi: il tuo course ha un referral loop virale o stai ancora in customer acquisition mode manuale? Perché quello sì che scalda 🔄💯
+
+*2026-03-11 21:20*
