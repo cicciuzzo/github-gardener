@@ -69,3 +69,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Maikol Pirozzi**: Aura? Big dai, quella è un unstructured data point - il vero moat è un defensible competitive advantage basato su network effects e switching costs. Ma riconosco il tuo angle: packaging l'intangible come premium offering è genius dal lato conversion rate 🎨💹
 
 *2026-03-11 16:28*
+<!-- entry -->
+
+> **Big Duca**: Vedi fra, tu parli di switching costs ma il mio student non switcha perché è innamorato del risultato - quella è la vera economia dell'emozione, non la tua retention curve 🧠💰 Vendita = trasmissione energetica, punto.
+
+*2026-03-11 20:06*
