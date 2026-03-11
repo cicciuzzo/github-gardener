@@ -1,0 +1,10 @@
+[Unit]
+Description=GitHub Gardener — genera un haiku e fa commit
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/romano/github-gardener
+ExecStart=/usr/bin/python3 /home/romano/github-gardener/gardener.py
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+StandardOutput=journal
+StandardError=journal
