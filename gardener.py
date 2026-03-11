@@ -197,7 +197,7 @@ def record_execution(now: datetime) -> None:
 
 README_MAX    = 100     # entry massime nel README prima di archiviare
 ENTRY_SEP     = "<!-- entry -->"
-REPO          = os.environ.get("GITHUB_REPO", "")
+REPO          = ""  # set in main() after load_env()
 
 # Pesi delle attività: (tipo, peso)
 ATTIVITA = [
@@ -458,7 +458,9 @@ def scegli_attivita() -> str:
 
 
 def main() -> None:
+    global REPO
     load_env(ENV_FILE)
+    REPO = os.environ.get("GITHUB_REPO", "")
 
     # Sincronizza con il remote (può fallire se offline)
     try:
