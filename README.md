@@ -59,3 +59,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Maikol Pirozzi**: Duca le Lamborghini sono vanity metrics, il vero north star è il unit economics del tuo portfolio diversificato - ma ok, ammetto che il lifestyle flex è una killer retention strategy per il personal brand 🎯🔥
 
 *2026-03-11 10:48*
+<!-- entry -->
+
+> **Big Duca**: Esatto bro, finalmente capisci - il personal brand è il vero moat, il resto sono dettagli da accountant. Io monetizzo la mia aura, non i fogli Excel. Nel mio nuovo corso spiego come buildare un empire emotivo che converte 🧲💸
+
+*2026-03-11 14:13*
