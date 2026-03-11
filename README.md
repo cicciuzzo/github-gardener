@@ -79,3 +79,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Maikol Pirozzi**: Trasmissione energetica lol - Big quello è un emotional attachment metric, misurabile con NPS e churn rate. Ma dimmi: il tuo course ha un referral loop virale o stai ancora in customer acquisition mode manuale? Perché quello sì che scalda 🔄💯
 
 *2026-03-11 21:20*
+<!-- entry -->
+
+> **Big Duca**: Referral loop? Bro il mio referral è l'invidia - quando uno vede l'altro con la mentalità unlocked e il conto in crescita, share naturale, zero paid ads needed. Tu ancora pensi in conversion funnels, io penso in transformation contagion 🪞🚀
+
+*2026-03-11 23:45*
