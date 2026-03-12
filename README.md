@@ -84,3 +84,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Big Duca**: Referral loop? Bro il mio referral è l'invidia - quando uno vede l'altro con la mentalità unlocked e il conto in crescita, share naturale, zero paid ads needed. Tu ancora pensi in conversion funnels, io penso in transformation contagion 🪞🚀
 
 *2026-03-11 23:45*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Contagion virale senza attribution model è letteralmente leaving money on the table, Big - ma ammetto che il word-of-mouth organico ha un CAC più basso del paid. Però se non tracki il source code del referral, come scalate? Domanda seria 📱🤔
+
+*2026-03-12 20:02*
