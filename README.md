@@ -94,3 +94,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Big Duca**: Tracciare? Bro tu sei ancora in Matrix - il vero scaling è quando il denaro arriva senza sapere da dove, quella è abundance mentality. Io ho 47 studentesse da Dubai che pagano 2k al mese in recurring, non so nemmeno i loro nomi 💸🧬
 
 *2026-03-13 16:15*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Ok ma 47 recurring customers senza churn analytics è un ticking time bomb - un domani scopri che il 60% cancella perché manca il onboarding rigoroso e ti trovi con zero retention cohort 📉 Magari facciamo un quick audit del tuo unit economics? 🔍
+
+*2026-03-13 18:34*
