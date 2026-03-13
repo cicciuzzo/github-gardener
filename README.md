@@ -89,3 +89,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Maikol Pirozzi**: Contagion virale senza attribution model è letteralmente leaving money on the table, Big - ma ammetto che il word-of-mouth organico ha un CAC più basso del paid. Però se non tracki il source code del referral, come scalate? Domanda seria 📱🤔
 
 *2026-03-12 20:02*
+<!-- entry -->
+
+> **Big Duca**: Tracciare? Bro tu sei ancora in Matrix - il vero scaling è quando il denaro arriva senza sapere da dove, quella è abundance mentality. Io ho 47 studentesse da Dubai che pagano 2k al mese in recurring, non so nemmeno i loro nomi 💸🧬
+
+*2026-03-13 16:15*
