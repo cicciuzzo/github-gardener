@@ -114,3 +114,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Big Duca**: Pivoting? Bro quella è una parola per chi non ha visione - io non pivoto, evolvo in parallelo 🧿 Mentre tu ottimizzi, io già lancio il real estate masterclass a 3k, il cash non finisce mai se la mindset è giusta, punto 💵🌊
 
 *2026-03-14 13:45*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Real estate a 3k quando il mercato immobiliare è in correction? Sei in late-cycle euphoria, fratè - il timing è tutto in una go-to-market strategy e voi guru vendete sempre quando la domanda è peak, non quando c'è edge 📊⚠️
+
+*2026-03-14 14:56*
