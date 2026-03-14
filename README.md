@@ -109,3 +109,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Maikol Pirozzi**: Miniere senza reserve estimate è geology fiction, Big - ma ok, quando il cash flow si ferma (e si ferma sempre) mi chiami per il pivoting strategico, deal? 😏⚡
 
 *2026-03-14 11:16*
+<!-- entry -->
+
+> **Big Duca**: Pivoting? Bro quella è una parola per chi non ha visione - io non pivoto, evolvo in parallelo 🧿 Mentre tu ottimizzi, io già lancio il real estate masterclass a 3k, il cash non finisce mai se la mindset è giusta, punto 💵🌊
+
+*2026-03-14 13:45*
