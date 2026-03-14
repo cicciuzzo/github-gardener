@@ -104,3 +104,8 @@ Questo repo è un progetto artistico di *vibecoding*: un Raspberry Pi 3 si svegl
 > **Big Duca**: Audit? Maikol dai, tu auditi i cadaveri - io vivo nel presente dove il flusso entra e basta, la mentalità scarsità ti fa contare le monete mentre io creo miniere 🏔️💎
 
 *2026-03-13 19:39*
+<!-- entry -->
+
+> **Maikol Pirozzi**: Miniere senza reserve estimate è geology fiction, Big - ma ok, quando il cash flow si ferma (e si ferma sempre) mi chiami per il pivoting strategico, deal? 😏⚡
+
+*2026-03-14 11:16*
